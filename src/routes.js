@@ -1,6 +1,9 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
+import AuthRoute from "./layouts/AuthRoute";
+import SpeciesManagement from "./pages/WildlifeExplorer/SpeciesManagement";
+import BlogManagement from "./pages/WildlifeExplorer/BlogManagement";
 // import SpeciesManagement from './pages/SpeciesManagement';
 // import BlogManagement from './pages/BlogManagement';
 // import ThreatManagement from './pages/ThreatManagement';
@@ -12,6 +15,10 @@ const RoutePaths = () => (
         <Routes>
             <Route path="/" element={<Login />}></Route>
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route element={<AuthRoute />}>
+                <Route path="/species" element={<SpeciesManagement />} />
+                <Route path="/blogs" element={<BlogManagement />} />
+            </Route>
             {/* <Route path="/species" element={<SpeciesManagement />} />
             <Route path="/blogs" element={<BlogManagement />} />
             <Route path="/threats" element={<ThreatManagement />} />

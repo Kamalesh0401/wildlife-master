@@ -1,0 +1,76 @@
+.container.species-management {
+    margin-top: 20px;
+    font-family: Arial, sans-serif;
+}
+
+.card {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border: none;
+}
+
+.table-section {
+    border-right: 1px solid rgb(121, 160, 160);
+}
+
+.heading {
+    border-bottom: 1px solid rgb(35, 36, 36);
+    background-color: aqua;
+}
+
+.species-card-header {
+    background-color: #f5f5f5;
+    padding: 15px;
+    font-weight: bold;
+}
+
+.species-card-footer {
+    padding: .75rem;
+    font-weight: 500;
+    background-color: #eef2f7;
+    border-top: 1px solid #dee2e6;
+}
+
+.card-body {
+    padding: 20px;
+}
+
+.table {
+    width: 100%;
+    margin-bottom: 0;
+}
+
+.table th,
+.table td {
+    text-align: left;
+    padding: 10px;
+    vertical-align: middle;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: #f9f9f9;
+}
+
+.form-control {
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.search-input {
+    margin-top: 10px;
+    border-radius: 20px;
+    padding: 10px;
+}
+
+.species-btn {
+    padding: 6px 12px;
+    font-weight: bold;
+    border: none;
+    color: #ffffff;
+    border-radius: 5px;
+    background-color: #00796b;
+}
+
+.species-btn :hover {
+    cursor: pointer;
+    background-color: #015e53;
+}

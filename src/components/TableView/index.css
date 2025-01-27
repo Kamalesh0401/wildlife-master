@@ -1,0 +1,17 @@
+.table-container {
+    margin: 20px auto;
+    max-width: 80%;
+    font-family: Arial, sans-serif;
+}
+
+.pagination-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    margin-top: 10px;
+}
+
+.pagination-container .btn {
+    padding: 5px 10px;
+}

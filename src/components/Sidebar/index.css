@@ -1,26 +1,9 @@
-/* Sidebar Styles */
-.sidebar {
-    width: 250px;
-    background-color: #f4f4f4;
-    padding: 1rem;
-    border-right: 1px solid #ddd;
-    height: 100vh;
-    overflow-y: auto;
-}
-
-/* Project List */
 .project-list {
     list-style: none;
     padding: 0;
     margin: 0;
 }
 
-/* Project Item */
-.project-item {
-    margin-bottom: 1rem;
-}
-
-/* Project Button */
 .project-button {
     background: none;
     border: none;
@@ -39,29 +22,25 @@
     background-color: #e8f0fe;
 }
 
-/* Subitem List */
 .subitem-list {
     list-style: none;
     padding-left: 1rem;
     margin-top: 0.5rem;
 }
 
-/* Subitem */
-.subitem {
+.subitem-link {
     font-size: 0.9rem;
     color: #555;
+    text-decoration: none;
+    display: block;
     margin-bottom: 0.5rem;
     padding: 0.3rem;
-    /* border-left: 3px solid #ddd; */
     transition: color 0.3s ease, border-color 0.3s ease;
+    background-color: none;
 }
 
-.subitem:hover {
-    color: #333;
-    background-color: #9da09f;
-}
-
-.active {
+.subitem-link:hover,
+.subitem-link.active {
     background-color: #00796b;
     color: #f7f6f6;
 }

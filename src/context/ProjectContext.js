@@ -28,7 +28,6 @@ const ProjectProvider = ({ children }) => {
             subitems: [
                 { id: 1, name: "Species Management", url: "/species" },
                 { id: 2, name: "Blogs Management", url: "/blogs" },
-                { id: 3, name: "Threats Management", url: "/threats" },
             ],
         },
         {

@@ -25,7 +25,7 @@ html {
 
 .main-content {
     flex: 1;
-    padding: 1rem;
+    padding: 0rem 1rem;
     background-color: #fff;
     overflow-y: auto;
     height: 100%;

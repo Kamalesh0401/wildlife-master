@@ -27,6 +27,8 @@ const ProjectProvider = ({ children }) => {
             name: "Wildlife Explorer",
             subitems: [
                 { id: 1, name: "Species Management", url: "/species" },
+                { id: 2, name: "Endangered Speces Management", url: "/endangered" },
+                { id: 2, name: "Threats", url: "/threats" },
                 { id: 2, name: "Blogs Management", url: "/blogs" },
             ],
         },

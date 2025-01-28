@@ -4,6 +4,8 @@ import Dashboard from './pages/Dashboard';
 import AuthRoute from "./layouts/AuthRoute";
 import SpeciesManagement from "./pages/WildlifeExplorer/SpeciesManagement";
 import BlogManagement from "./pages/WildlifeExplorer/BlogManagement";
+import ThreatsManagement from "./pages/WildlifeExplorer/ThreatsManagement";
+import EndangeredSpeciesManagement from "./pages/WildlifeExplorer/EndangeredSpeciesManagement";
 // import SpeciesManagement from './pages/SpeciesManagement';
 // import BlogManagement from './pages/BlogManagement';
 // import ThreatManagement from './pages/ThreatManagement';
@@ -17,6 +19,8 @@ const RoutePaths = () => (
             <Route path="/dashboard" element={<Dashboard />} />
             <Route element={<AuthRoute />}>
                 <Route path="/species" element={<SpeciesManagement />} />
+                <Route path="/endangered" element={<EndangeredSpeciesManagement />} />
+                <Route path="/threats" element={<ThreatsManagement />} />
                 <Route path="/blogs" element={<BlogManagement />} />
             </Route>
             {/* <Route path="/species" element={<SpeciesManagement />} />

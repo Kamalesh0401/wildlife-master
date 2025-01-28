@@ -70,7 +70,7 @@ const Login = () => {
                                 aria-label="Password"
                             />
                         </div>
-                        <button type="submit" className="submit-btn">
+                        <button type="submit" className="wlidlife-btn mt-3">
                             Login
                         </button>
                     </form>

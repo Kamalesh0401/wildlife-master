@@ -1,0 +1,100 @@
+.wildlife-management {
+    /* margin-top: 20px; */
+    font-family: Arial, sans-serif;
+}
+
+.wildlife-card-header {
+    padding: 15px;
+    font-weight: bold;
+    /* border-bottom: 1px solid rgb(35, 36, 36); */
+    background-color: #eef2f7;
+    color: #030303;
+}
+
+.wlidlife-btn-area {
+    padding: .75rem;
+    font-weight: 500;
+    background-color: #eef2f7;
+    border-top: 1px solid #dee2e6;
+}
+
+.wlidlife-btn {
+    background: #00796b;
+    color: #fff;
+    padding: 5px;
+    font-size: 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.wlidlife-btn :hover {
+    background: #004d40;
+}
+
+.close-button {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: #030303;
+}
+
+.close-button:hover {
+    cursor: pointer;
+    color: #e60000;
+}
+
+
+label {
+    font-size: 0.9rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    display: block;
+    color: #006064;
+}
+
+input {
+    width: 100%;
+    padding: 0.8rem;
+    font-size: 0.9rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+input:focus {
+    border-color: #00796b;
+    box-shadow: 0px 0px 3px rgba(0, 121, 107, 0.5);
+}
+
+select {
+    width: 100%;
+    padding: 0.8rem;
+    font-size: 0.9rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+select:focus {
+    border-color: #00796b;
+    box-shadow: 0px 0px 3px rgba(0, 121, 107, 0.5);
+}
+
+textarea {
+    width: 100%;
+    padding: 0.8rem;
+    font-size: 0.9rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+textarea:focus {
+    border-color: #00796b;
+    box-shadow: 0px 0px 3px rgba(0, 121, 107, 0.5);
+}

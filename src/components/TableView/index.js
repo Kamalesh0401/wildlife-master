@@ -108,7 +108,7 @@ class TableView extends Component {
         const totalPages = Math.ceil(data.length / rowsPerPage);
 
         return (
-            <div className="table-container">
+            <>
                 <table className="table table-striped table-bordered">
                     <thead className="thead-dark">
                         <tr>
@@ -175,7 +175,7 @@ class TableView extends Component {
                         Next
                     </button>
                 </div>}
-            </div>
+            </>
         );
     }
 }

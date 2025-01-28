@@ -138,11 +138,20 @@
 
 
 import React, { useState } from "react";
-import "../../styles/pages/WildlifeExplorer/SpeciesManagement.css";;
+import "../../styles/pages/WildlifeExplorer/SpeciesManagement.css";
+import TableView from "../../components/TableView";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faClose, faPlus, faRefresh, faSave, faSearch } from '@fortawesome/free-solid-svg-icons';
+
 const SpeciesManagement = () => {
     const data = [
         { commonName: "Lion", scientificName: "Panthera leo", status: "Endangered" },
         { commonName: "Elephant", scientificName: "Elephas maximus", status: "Vulnerable" },
+    ];
+    const columns = [
+        { key: 'commonName', title: 'Common Name' },
+        { key: 'scientificName', title: 'Scientific Name' },
+        { key: 'status', title: 'Status' },
     ];
 
     const [speciesData, setSpeciesData] = useState({
@@ -168,6 +177,42 @@ const SpeciesManagement = () => {
         setSpeciesData({ ...speciesData, [name]: file });
     };
 
+    const clickAction = (e) => {
+        if (e) {
+            let action = e.id;
+            if (action === undefined && e.target) {
+                action = e.target.name || e.target.id || '';
+                e = undefined;
+            }
+            if (!action) {
+                return;
+            }
+
+            try {
+                if (e && e.stopPropagation) {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    e.nativeEvent.stopImmediatePropagation();
+                }
+
+            } catch (ex) { }
+
+            if (action == "btn_new") {
+                clearForm(e);
+            }
+            if (action == "btn_save") {
+
+            }
+            if (action == "btn_clear") {
+                clearForm(e);
+            }
+            if (action == "btn_close") {
+
+            }
+
+        }
+    }
+
     const clearForm = () => {
         setSpeciesData({
             commonName: "",
@@ -179,154 +224,116 @@ const SpeciesManagement = () => {
             threats: "",
             funFacts: "",
             image: null,
+            video: null,
         });
+
     };
 
-    return (
-        <div className="species-management">
-            <div className="species-card-header heading">Species</div>
-            <div className="row">
-                <div className="col-md-4 table-section">
-                    {/* <div className="card"> */}
-                    <div className="card-header">
-                        <input
-                            type="text"
-                            className="form-control search-input"
-                            placeholder="Search species..."
-                        />
+    const renderForm = () => {
+        return (
+            <form>
+                <div className="row">
+                    <div className="col-md-6 mb-3">
+                        <label className="form-label" htmlFor="commonName">Common Name *</label>
+                        <input type="text" name="commonName" value={speciesData.commonName} onChange={handleChange} placeholder="Enter common name" />
                     </div>
-                    <div className="card-body">
-                        <table className="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th>Common Name</th>
-                                    <th>Scientific Name</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {data.map((species, index) => (
-                                    <tr key={index}>
-                                        <td>{species.commonName}</td>
-                                        <td>{species.scientificName}</td>
-                                        <td>{species.status}</td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
+                    <div className="col-md-6 mb-3">
+                        <label className="form-label" htmlFor="scientificName">Scientific Name *</label>
+                        <input type="text" name="scientificName" value={speciesData.scientificName} onChange={handleChange} placeholder="Enter scientific name" />
                     </div>
-                    {/* </div> */}
+                    <div className="col-md-6 mb-3">
+                        <label className="form-label" htmlFor="habitat">Habitat</label>
+                        <input type="text" name="habitat" value={speciesData.habitat} onChange={handleChange} placeholder="Enter habitat" />
+                    </div>
+                    <div className="col-md-6 mb-3">
+                        <label className="form-label" htmlFor="diet">Diet</label>
+                        <input type="text" name="diet" value={speciesData.diet} onChange={handleChange} placeholder="Enter diet" />
+                    </div>
+                    <div className="col-md-6 mb-3">
+                        <label className="form-label" htmlFor="conservationStatus">Conservation Status</label>
+                        <select name="conservationStatus" value={speciesData.conservationStatus} onChange={handleChange} >
+                            <option value="">Select</option>
+                            <option value="Least Concern">Least Concern</option>
+                            <option value="Near Threatened">Near Threatened</option>
+                            <option value="Vulnerable">Vulnerable</option>
+                            <option value="Endangered">Endangered</option>
+                            <option value="Critically Endangered">Critically Endangered</option>
+                        </select>
+                    </div>
+                    <div className="col-md-6 mb-3">
+                        <label className="form-label" htmlFor="threats">threats</label>
+                        <select name="threats" value={speciesData.threats} onChange={handleChange} >
+                            <option value="">Select</option>
+                            <option value="Habitat destruction">Habitat destruction</option>
+                            <option value="Pollution">Pollution</option>
+                            <option value="Poaching">Poaching</option>
+                            <option value="Climate Change">Climate Change</option>
+                            <option value="Human-Wildlife Conflict">Human-Wildlife Conflict</option>
+                        </select>
+                    </div>
+                    <div className="col-md-6 mb-3">
+                        <label className="form-label" htmlFor="behavior">Behavior</label>
+                        <textarea name="behavior" value={speciesData.behavior} onChange={handleChange} placeholder="Enter behavior details"></textarea>
+                    </div>
+                    <div className="col-md-6 mb-3">
+                        <label className="form-label" htmlFor="funFacts">Fun Facts</label>
+                        <textarea name="funFacts" value={speciesData.funFacts} onChange={handleChange} placeholder="Enter fun facts"></textarea>
+                    </div>
+                    <div className="col-md-6 mb-3">
+                        <label className="form-label" htmlFor="image">Upload Image</label>
+                        <input type="file" name="image" onChange={handleFileChange} value={speciesData.image} />
+                    </div>
+                    <div className="col-md-6 mb-3">
+                        <label className="form-label" htmlFor="video">Upload Video</label>
+                        <input type="file" name="video" placeholder="Choose Video" value={speciesData.video} onChange={handleFileChange} />
+                    </div>
                 </div>
-
-                {/* Form Section */}
-                <div className="col-md-8">
-                    {/* <div className="card"> */}
-                    <div className="card-body">
-                        <form>
+            </form>
+        )
+    }
+    return (
+        <div className="wildlife-management">
+            <div className="wildlife-card-header">Species</div>
+            <div className="window-content-area p-3 vh-100">
+                <div className="container-fluid h-100 p-0">
+                    <div className="row h-100">
+                        <div className="col-md-5">
                             <div className="row">
-                                <div className="col-md-6 mb-3">
-                                    <label>Common Name *</label>
-                                    <input
-                                        type="text"
-                                        name="commonName"
-                                        value={speciesData.commonName}
-                                        onChange={handleChange}
-                                        className="form-control"
-                                        placeholder="Enter common name"
-                                    />
+                                <div className="col-md-6">
+                                    <div className="mb-2">
+                                        <label className="form-label" htmlFor="commonNameSrch">Common Name</label>
+                                        <input type="text" className="form-control search-input" placeholder="Search species..." name="commonNameSrch" id="commonNameSrch" />
+                                    </div>
                                 </div>
-                                <div className="col-md-6 mb-3">
-                                    <label>Scientific Name *</label>
-                                    <input
-                                        type="text"
-                                        name="scientificName"
-                                        value={speciesData.scientificName}
-                                        onChange={handleChange}
-                                        className="form-control"
-                                        placeholder="Enter scientific name"
-                                    />
-                                </div>
-                                <div className="col-md-6 mb-3">
-                                    <label>Habitat</label>
-                                    <input
-                                        type="text"
-                                        name="habitat"
-                                        value={speciesData.habitat}
-                                        onChange={handleChange}
-                                        className="form-control"
-                                        placeholder="Enter habitat"
-                                    />
-                                </div>
-                                <div className="col-md-6 mb-3">
-                                    <label>Diet</label>
-                                    <input
-                                        type="text"
-                                        name="diet"
-                                        value={speciesData.diet}
-                                        onChange={handleChange}
-                                        className="form-control"
-                                        placeholder="Enter diet"
-                                    />
-                                </div>
-                                <div className="col-md-12 mb-3">
-                                    <label>Behavior</label>
-                                    <textarea
-                                        name="behavior"
-                                        value={speciesData.behavior}
-                                        onChange={handleChange}
-                                        className="form-control"
-                                        placeholder="Enter behavior details"
-                                    ></textarea>
-                                </div>
-                                <div className="col-md-12 mb-3">
-                                    <label>Upload Image</label>
-                                    <input
-                                        type="file"
-                                        name="image"
-                                        onChange={handleFileChange}
-                                        className="form-control"
-                                    />
+                                <div className="col-md-3 d-flex align-items-end">
+                                    <div className="d-flex flex-row justify-content-start align-items-end h-100 w-100 p-2">
+                                        <button type="button" name="btn_search" className="wlidlife-btn me-1" onClick={(e) => this.clickAction({ id: 'btn_search' })}> <FontAwesomeIcon icon={faSearch} /></button>
+                                        <button type="button" name="btn_clear" className="wildlife-btn" onClick={(e) => this.clickAction({ id: 'btn_clear' })}> <FontAwesomeIcon icon={faRefresh} /></button>
+                                    </div>
                                 </div>
                             </div>
-                        </form>
+                            <div className="row mt-2">
+                                <div className="col">
+                                    <TableView data={data} columns={columns} rowCount={null} />
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-md-7 border-start">
+                            {renderForm()}
+                        </div>
                     </div>
-                    {/* </div> */}
                 </div>
             </div>
             {/* Buttons Section */}
-            {/* <div className="species-card-footer ">
-                <div className="row">
-                    <div className="col-md-3 text-start">
-                        <button type="button" className="btn btn-success mx-2">
-                            New
-                        </button>
-                    </div>
-                    <div className="col-md-5  text-end">
-                        <button type="button" className="btn btn-success mx-2">
-                            Save
-                        </button>
-                        <button
-                            type="button"
-                            className="btn btn-secondary mx-2"
-                            onClick={clearForm}
-                        >
-                            Clear
-                        </button>
-                        <button type="button" className="btn btn-danger mx-2">
-                            Close
-                        </button>
-                    </div>
-                </div>
-            </div> */}-btn
-            <div className="species-card-footer">
+            <div className="wlidlife-btn-area container-fluid text-white d-flexZ align-items-center justify-content-center">
                 <div className="row">
                     <div className="col">
-                        <button type="button" id="btn_new" className="species-btn me-1" onClick={'"'}><i className="fa fa-refresh"></i> New</button>
+                        <button type="button" id="btn_new" className="wlidlife-btn me-1" onClick={(e) => clickAction({ id: 'btn_new' })}><FontAwesomeIcon icon={faPlus} /> New</button>
                     </div>
                     <div className="col-auto">
-                        <button type="button" id="btn_save" className="species-btn me-1" onClick={'"'}><i className="fa fa-refresh"></i> Save</button>
-                        <button type="button" id="btn_clear" className="species-btn me-1" onClick={'"'}><i className="fa fa-refresh"></i> Clear</button>
-                        <button type="button" id="btn_cancel" className="species-btn me-1" onClick={'"'}><i className="fa fa-refresh"></i> Close</button>
+                        <button type="button" id="btn_save" className="wlidlife-btn me-1" onClick={(e) => clickAction({ id: 'btn_save' })}><FontAwesomeIcon icon={faSave} />Save</button>
+                        <button type="button" id="btn_clear" className="wlidlife-btn me-1" onClick={(e) => clickAction({ id: 'btn_clear' })}><FontAwesomeIcon icon={faRefresh} /> Clear</button>
+                        <button type="button" id="btn_close" className="wlidlife-btn me-1" onClick={(e) => clickAction({ id: 'btn_close' })}><FontAwesomeIcon icon={faClose} /> Close</button>
                     </div>
                 </div>
             </div>

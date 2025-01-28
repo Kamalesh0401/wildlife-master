@@ -1,0 +1,70 @@
+.headerStyle {
+    display: "flex";
+    justify-content: "space-between";
+    align-items: "center";
+    padding: "0.5rem 1rem";
+    background-color: "#004d40";
+    color: "#fff";
+    position: "relative";
+    box-shadow: "0 2px 4px rgba(0, 0, 0, 0.1)";
+}
+
+
+
+.siteNameStyle {
+    font-size: "1.5rem";
+    font-weight: "bold";
+}
+
+
+.userSectionStyle {
+    position: "relative";
+    cursor: "pointer";
+}
+
+.userIconWrapperStyle {
+    display: "flex";
+    align-items: "center";
+    justify-content: "center";
+    background-color: "#fff";
+    border-radius: "50%";
+    width: "40px";
+    height: "40px";
+    color: "#4CAF50";
+    box-shadow: "0 2px 4px rgba(0, 0, 0, 0.1)";
+}
+
+.iconStyle {
+    font-size: "1.2rem";
+}
+
+.dropdownStyle {
+    position: "absolute";
+    top: "50px";
+    right: "0";
+    background-color: "#fff";
+    color: "#333";
+    border-radius: "4px";
+    box-shadow: "0 2px 4px rgba(0, 0, 0, 0.2)";
+    padding: "0.5rem 1rem";
+    z-index: 10;
+    width: "150px";
+    text-align: "center";
+}
+
+
+.welcomeTextStyle {
+    font-weight: "bold";
+    margin-bottom: "0.5rem";
+}
+
+
+
+.logoutLinkStyle {
+    text-decoration: "none";
+    color: "#4CAF50";
+    display: "flex";
+    align-items: "center";
+    justify-content: "center";
+    font-weight: "bold";
+}

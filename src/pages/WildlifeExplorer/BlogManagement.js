@@ -3,7 +3,7 @@ import TableView from "../../components/TableView";
 import AuditLabel from "../../components/AuditLabel";
 import Loader from "../../components/Loader";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faClose, faPlus, faRefresh, faSave, faSearch, faUpload, faTimes, faImage } from '@fortawesome/free-solid-svg-icons';
+import { faClose, faPlus, faRefresh, faSave, faSearch, faUpload, faTimes, faImage, faVideo } from '@fortawesome/free-solid-svg-icons';
 import ImagePreview from "../../components/ImagePreview";
 const BlogManagement = () => {
 
@@ -19,12 +19,13 @@ const BlogManagement = () => {
         { key: 'isFeatured', title: 'Featured' },
     ];
     let Images = [
-        { _id: 1, url: 'https:/as', img_name: 'John Doe', is_video: true },
-        { _id: 1, url: 'https:/as', img_name: 'Jane Smith', is_video: false },
-        { _id: 1, url: 'https:/as', img_name: 'John Doe', is_video: true },
-        { _id: 1, url: 'https:/as', img_name: 'Jane Smith', is_video: false },
-        { _id: 1, url: 'https:/as', img_name: 'John Doe', is_video: true },
-        { _id: 1, url: 'https:/as', img_name: 'Jane Smith', is_video: false },
+        { _id: 1, url: 'https://drive.google.com/thumbnail?id=1xyKldfIW6qslZ0b8F_Vr_qL7-L3cH8-g', img_name: 'Amazon', is_video: true },
+        { _id: 1, url: 'https://drive.google.com/thumbnail?id=1wra_AFWtDId57_sVnMyWxvOTbLWeAt-w', img_name: 'black-tailed-prairie-dog', is_video: false },
+        { _id: 1, url: 'https://drive.google.com/thumbnail?id=1xyKldfIW6qslZ0b8F_Vr_qL7-L3cH8-g', img_name: 'Tropical Rainforest', is_video: false },
+        { _id: 1, url: 'https://drive.google.com/thumbnail?id=1JF6dpUC0AsZlO9MLZEBqh7_RmjfvKReg', img_name: 'Ror Deer', is_video: false },
+        { _id: 1, url: 'https://drive.google.com/thumbnail?id=1HpCpCRRhHHh6trbMK5nan_yKkS2etvIz', img_name: 'Elephant', is_video: false },
+        { _id: 1, url: 'https://drive.google.com/thumbnail?id=1jROtS8jXutmtp2QhrUL-g7gChLUgcDwF', img_name: 'Lion', is_video: false },
+        { _id: 1, url: 'https://drive.google.com/thumbnail?id=1gHVU9KruYksqyV454GkZlsZnAMUj-V4Y', img_name: 'Deer', is_video: false },
     ];
 
     const [showImagePreview, setShowImagePreview] = useState(false);
@@ -175,14 +176,26 @@ const BlogManagement = () => {
                             <div className="col-md-10 me-3">
                                 <input type="file" name="image" onChange={handleFileChange} />
                             </div>
-                            <div className="col-md-2">
+                            <div className="col-md-2 mt-2">
                                 <button type="button" id="btn_img" className="wlidlife-btn me-1" onClick={(e) => clickAction({ id: 'btn_img' })}><FontAwesomeIcon icon={faImage} /></button>
                             </div>
                         </div>
                     </div>
                     <div className="col-md-6 mb-2">
                         <label className="form-label" htmlFor="video">Video</label>
-                        <input type="file" name="video" onChange={handleFileChange} />
+                        <div className="col-md-12 d-flex justify-content-between">
+                            <div className="col-md-10 me-3">
+                                <input type="file" name="video" onChange={handleFileChange} />
+                            </div>
+                            <div className="col-md-2 mt-2">
+                                <button type="button" id="btn_video" className="wlidlife-btn me-1" onClick={(e) => clickAction({ id: 'btn_video' })}><FontAwesomeIcon icon={faVideo} /></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div className='col-md-12 mt-5 mb-2' hidden={false}>
+                        <div className='col'>
+                            <AuditLabel modifiedOn={blogsData.modifiedOn} modifiedBy={blogsData.modifiedBy} />
+                        </div>
                     </div>
                 </div>
             </form >
@@ -225,11 +238,6 @@ const BlogManagement = () => {
                         </div>
                         <div className="col-md-7 border-start">
                             {renderForm()}
-                        </div>
-                        <div className='row mx-auto' hidden={false}>
-                            <div className='col'>
-                                <AuditLabel modifiedOn={blogsData.modifiedOn} modifiedBy={blogsData.modifiedBy} />
-                            </div>
                         </div>
                     </div>
                 </div>

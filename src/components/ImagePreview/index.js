@@ -9,8 +9,8 @@ const ImagePreview = ({ onClose, images, callback, title }) => {
 
     useEffect(() => {
         setTimeout(() => {
-            setImageList([]);
-        }, 5000);
+            setImageList(images || []);
+        }, 1000);
 
 
         clearTimeout();
@@ -79,19 +79,21 @@ const ImagePreview = ({ onClose, images, callback, title }) => {
                             </div>
                         ))}
                     </div>
-                </div> : (
-                    // <div className="image-preview-container">
-                    //     <p className="loading">
-                    //         <p >Loading</p>
-                    //         <span className="dot"></span>
-                    //         <span className="dot"></span>
-                    //         <span className="dot"></span>
-                    //     </p>
-                    // </div>
-                    <Loader>Loading</Loader>
-                )}
+                </div> : (<Loader>Loading</Loader>)}
         </div>
     );
 };
 
 export default ImagePreview;
+
+//<img src="https://drive.google.com/thumbnail?id=YOUR_FILE_ID" alt="image description">
+
+// https://drive.google.com/thumbnail?id=1JF6dpUC0AsZlO9MLZEBqh7_RmjfvKReg
+
+// https://drive.google.com/thumbnail?id=1HpCpCRRhHHh6trbMK5nan_yKkS2etvIz
+
+// https://drive.google.com/thumbnail?id=1jROtS8jXutmtp2QhrUL-g7gChLUgcDwF
+
+// https://drive.google.com/thumbnail?id=1gHVU9KruYksqyV454GkZlsZnAMUj-V4Y
+
+//https://drive.google.com/file/d/1JF6dpUC0AsZlO9MLZEBqh7_RmjfvKReg/view?usp=sharing

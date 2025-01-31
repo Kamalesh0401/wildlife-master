@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 const Login = () => {
     const [loginid, setLoginid] = useState(""); // Corrected state
     const [password, setPassword] = useState("");
+    const [showLoading, setShowLoading] = useState(false);
     const navigate = useNavigate();
 
     const loginRef = useRef(null);
@@ -21,7 +22,7 @@ const Login = () => {
         if (name === "password") setPassword(value);
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault(); // Prevent page reload
         if (!loginid) {
             alert("Please enter Login ID");
@@ -33,8 +34,27 @@ const Login = () => {
             passwordRef.current.focus();
             return;
         }
-        navigate('/dashboard');
-        //alert("Login successful!");
+        try {
+            setShowLoading(true);
+            const res = await fetch("http://localhost:5001/api/login", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ loginid: loginid, password: password })
+            });
+            if (res.status == 200) {
+                const response = await res.json();
+                localStorage.setItem("token", response.token);
+                navigate('/dashboard');
+            }
+        } catch (ex) {
+            console.error("Error add new blog data: ", ex);
+        }
+        finally {
+            setShowLoading(false);
+        }
+
     };
 
     return (
@@ -70,7 +90,7 @@ const Login = () => {
                                 aria-label="Password"
                             />
                         </div>
-                        <button type="submit" className="wlidlife-btn mt-3">
+                        <button type="submit" className="wlidlife-btn mt-3" >
                             Login
                         </button>
                     </form>

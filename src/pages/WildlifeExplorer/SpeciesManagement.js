@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "../../styles/pages/WildlifeExplorer/SpeciesManagement.css";
 import TableView from "../../components/TableView";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faClose, faPlus, faImage, faRefresh, faSave, faSearch, faVideo } from '@fortawesome/free-solid-svg-icons';
+import { faClose, faPlus, faImage, faRefresh, faSave, faSearch,faTimes, faVideo } from '@fortawesome/free-solid-svg-icons';
 
 const SpeciesManagement = () => {
     const data = [
@@ -90,6 +90,10 @@ const SpeciesManagement = () => {
 
     };
 
+    const onClose = (e) => {
+
+    };
+
     const renderForm = () => {
         return (
             <form>
@@ -168,7 +172,12 @@ const SpeciesManagement = () => {
     }
     return (
         <div className="wildlife-management">
-            <div className="wildlife-card-header">Species</div>
+            <div className="wildlife-window-header">
+                <h5 className="wildlife-header-title text-truncate">Species</h5>
+                <span className="wildlife-window-close" title="Close" onClick={(e) => onClose}>
+                    <FontAwesomeIcon icon={faTimes} />
+                </span>
+            </div>
             <div className="window-content-area p-3 vh-100">
                 <div className="container-fluid h-100 p-0">
                     <div className="row h-100">

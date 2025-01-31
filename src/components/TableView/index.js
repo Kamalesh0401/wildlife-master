@@ -1,52 +1,3 @@
-// import React, { Component } from 'react';
-// class TableView extends Component {
-//     constructor(props) {
-//         super(props);
-//         this.state = {
-//             currentPage: 1,
-//             sortColumn: '',
-//             sortDirection: 'asc'
-//         };
-//     }
-
-//     handleClick = (index) => {
-//         console.log("handleClick : ", index);
-//     }
-
-//     render() {
-//         const { columns, data } = this.props;
-//         return (
-//             <div>
-//                 <table className="table">
-//                     <thead>
-//                         <tr>
-//                             {columns.map(column => (
-//                                 <th key={column.key}>
-//                                     {column.title}
-//                                     {this.state.sortColumn === column.key && (
-//                                         <i className={`bi bi-caret-${this.state.sortDirection === 'asc' ? 'up' : 'down'}`}></i>
-//                                     )}
-//                                 </th>
-//                             ))}
-//                         </tr>
-//                     </thead>
-//                     <tbody>
-//                         {data && data.map((item, index) => (
-//                             <tr key={index} onClick={this.handleClick(index)}>
-//                                 {columns.map(column => (
-//                                     <td key={column.key}>{item[column.key]}</td>
-//                                 ))}
-//                             </tr>
-//                         ))}
-//                     </tbody>
-//                 </table>
-//             </div>
-//         );
-//     }
-// }
-// export default TableView;
-
-
 import React, { Component } from 'react';
 import "./index.css";
 
@@ -114,9 +65,10 @@ class TableView extends Component {
                         <tr>
                             {columns.map(column => (
                                 <th
+                                    className='wildlife-table-header'
                                     key={column.key}
                                     onClick={() => this.handleSort(column.key)}
-                                    style={{ cursor: 'pointer' }}
+                                // style={{ cursor: 'pointer', color: '#00796b' }}
                                 >
                                     {column.title}
                                     {sortColumn === column.key && (
@@ -130,8 +82,9 @@ class TableView extends Component {
                         {processedData.length > 0 ? (
                             processedData.map((item, index) => (
                                 <tr
+                                    className='wildlife-table-row'
                                     key={index}
-                                    onClick={() => this.handleClick(index)}
+                                    onClick={() => this.props.handleClick(index, item)}
                                     style={{ cursor: 'pointer' }}
                                 >
                                     {columns.map(column => (

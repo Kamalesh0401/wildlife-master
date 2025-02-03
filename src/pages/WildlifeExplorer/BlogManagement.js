@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import TableView from "../../components/TableView";
 import AuditLabel from "../../components/AuditLabel";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faClose, faPlus, faRefresh, faSave, faSearch, faUpload, faTimes, faImage, faVideo, fas, faLeaf, faDownload } from '@fortawesome/free-solid-svg-icons';
+import { faClose, faPlus, faRefresh, faSave, faSearch, faUpload, faTimes, faImage, faVideo, fas, faLeaf, faDownload, faCross } from '@fortawesome/free-solid-svg-icons';
 import ImagePreview from "../../components/ImagePreview";
 import Loader from "../../components/Loader";
 import { WildlifeBody } from "../../components/WildlifeBody";
@@ -28,7 +29,14 @@ const BlogManagement = () => {
     const [showLoading, setShowLoading] = useState(false);
     const [tableData, setTableData] = useState([]);
     const [showImagePreview, setShowImagePreview] = useState(false);
-    const fileInputRef = useRef(null);
+    const navigate = useNavigate();
+    const imageInputRef = useRef(null);
+    const videoInputRef = useRef(null);
+    const token = localStorage.getItem("token");
+    const admin = JSON.parse(localStorage.getItem("admin"));
+    console.log("admin BlogManagement: ", admin.id);
+
+    const inputRefs = {};
     const [blogsData, setBlogsData] = useState({
         title: "",
         author: "",
@@ -42,13 +50,12 @@ const BlogManagement = () => {
         views: 0,
         likes: 0,
         isFeatured: true,
-        modifiedBy: "Jhon",
-        modifiedOn: new Date(),
-        isEdit: false
+        modifiedBy: admin.id,
+        modifiedOn: null,
+        isEdit: false,
     });
-    const token = localStorage.getItem("token");
+    const [dataCopy, setDataCopy] = useState(JSON.stringify(blogsData));
     useEffect(() => {
-
         const fetchBlogs = async () => {
 
             const options = {
@@ -58,15 +65,15 @@ const BlogManagement = () => {
                     "Authorization": `Bearer ${token}` // Attach token
                 }
             };
-
             try {
                 setShowLoading(true);
                 const res = await fetch("http://localhost:5001/api/blogs/", options);
                 let response = await res.json();
-                response = response.map((item) => (item.isFeatured === true ? { ...item, isFeatured: 'Yes' } : { ...item, isFeatured: 'No' }))
+                response = response.map((item) => (item.isFeatured === true ? { ...item, isFeatured: 'Yes' } : { ...item, isFeatured: 'No' }));
                 console.log("Fecthing Blog data :", response);
                 setTableData(response);
             } catch (ex) {
+                alert("Something went wrong");
                 console.error("Error fetching blog data: ", ex);
             }
             finally {
@@ -92,11 +99,28 @@ const BlogManagement = () => {
             views: 0,
             likes: 0,
             isFeatured: true,
-            modifiedBy: "Jhon",
-            modifiedOn: new Date(),
+            modifiedBy: admin.id,
+            modifiedOn: null,
             isEdit: false
         });
-
+        setDataCopy(JSON.stringify({
+            _id: null,
+            title: "",
+            author: "",
+            content: "",
+            summary: "",
+            tags: [],
+            publishedDate: null,
+            updatedDate: null,
+            image: null,
+            video: null,
+            views: 0,
+            likes: 0,
+            isFeatured: true,
+            modifiedBy: admin.id,
+            modifiedOn: null,
+            isEdit: false
+        }));
     };
 
     const handleChange = (e) => {
@@ -109,57 +133,151 @@ const BlogManagement = () => {
         setBlogsData({ ...blogsData, [e.target.name]: e.target.checked });
     }
 
-    const handleFileChange = (e) => {
-        const { name } = e.target;
-        const file = e.target.files[0];
-        console.log("handleFileChange ", file);
-        setBlogsData({ ...blogsData, [name]: file.name });
+    const handleFileChange = (e, type) => {
+        if (e.target && e.target.files[0]) {
+            console.log("handleFileChange : ", e.target.name, e.target.files[0]);
+            const { name } = e.target;
+            const file = e.target.files[0];
+            const result = {
+                _id: null,
+                file_name: file.name,
+                file_url: `https://drive.google.com/thumbnail?id=${file.name}`,
+                file_dir: "blogs",
+                is_video: type === "video",
+                modifiedBy: admin.id,
+                upload: true
+            }
+            console.log("handleFileChange result : ", result);
+            setBlogsData({ ...blogsData, [name]: result });
+        }
     };
 
-    const handleMultiSelectChange = (e) => {
-        const { name, options } = e.target;
-        const selectedValues = Array.from(options)
-            .filter(option => option.selected)
-            .map(option => option.value);
-        setBlogsData({ ...blogsData, [name]: selectedValues });
-    };
-
-    const onImageChange = (e, id) => {
-        console.log("callback : ", e, id);
-        setBlogsData({ ...blogsData, [e.name]: e._id });
+    const onImageChange = (e, item) => {
+        const result = {
+            _id: item._id,
+            file_name: item.file_name,
+            file_url: item.file_url,
+            file_dir: "blogs",
+            is_video: item.is_video,
+            modifiedBy: admin.id,
+            upload: false
+        }
+        console.log("onImageChange result : ", result);
+        setBlogsData({ ...blogsData, [item.is_video ? "video" : "image"]: result });
         setShowImagePreview(false)
     }
 
-    const onClose = () => {
+    const handleRemove = (e, name) => {
+        e.stopPropagation();
+        setBlogsData({ ...blogsData, [name]: null });
+    }
+    const handleSubstring = (imgname) => {
+        let result = " ";
+        let imglen = 30;
+        try {
+            if (imgname && imgname.length > imglen) {
+                result = imgname.substring(0, imglen) + "...";
+            } else {
+                result = imgname;
+            }
+        }
+        catch (ex) { }
+        return result;
+    }
 
+    const onClose = (e) => {
+        console.log("onClose : ")
+        navigate('/dashboard');
+    }
+
+    const isValidSave = () => {
+        if (isValueChanged()) {
+            if (!blogsData.title) {
+                alert("Please enter Title");
+                return false;
+            }
+            else if (!blogsData.author) {
+                alert("Please enter Author");
+                return false;
+            }
+            if (!blogsData.content) {
+                alert("Please enter Content");
+                return false;
+            }
+            else {
+                return true;
+            }
+        }
+        else {
+            alert("No changes has been made");
+            return false;
+        }
     }
 
     const handleSave = async () => {
-        if (!blogsData.title) {
-            alert("Please enter Title");
-        }
-        else if (!blogsData.author) {
-            alert("Please enter Author");
-        }
-        if (!blogsData.content) {
-            alert("Please enter Content");
-        }
-        try {
-            setShowLoading(true);
-            const res = await fetch(`http://localhost:5001/api/blogs/saveblogs`, blogsData);
-            const response = await res.json();
-            console.log("Add new blog data :", response);
-        } catch (ex) {
-            console.error("Error add new blog data: ", ex);
-        }
-        finally {
-            clearForm();
-            setShowLoading(false);
-        }
+        if (isValidSave()) {
 
+            try {
+                const options = {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ ...blogsData, modifiedBy: admin.id })
+                };
+                setShowLoading(true);
+                console.log("Add new blog data :", options, blogsData);
+                const res = await fetch(`http://localhost:5001/api/blogs/saveblogs`, options);
+                const response = await res.json();
+                console.log("Add new blog data :", response);
+                if (res.status === 200) {
+                    alert("Data saved successfully");
+                    clearForm();
+                }
+                else {
+                    alert("Something went wrong");
+                }
+
+            }
+            catch (ex) {
+                alert("Something went wrong");
+                console.error("Error add new blog data: ", ex);
+            }
+            finally {
+                setShowLoading(false);
+            }
+        }
     };
 
+    const handleDataChange = (id) => {
+        console.log("handleDataChange click :", id, blogsData);
+        if (id === blogsData._id) {
+            return;
+        }
+        else {
+            if (isValueChanged()) {
+                const test = window.confirm("Unsaved changes exists. Save and proceed.");
+                try {
+                    if (test) {
+                        handleSave();
+                        return;
+                    }
+                    else {
+                        fetchSelectedBlog(id);
+                    }
+                }
+                catch { }
+
+            }
+            else {
+                fetchSelectedBlog(id);
+            }
+        }
+    }
+
     const fetchSelectedBlog = async (id) => {
+
         const options = {
             method: "GET",
             headers: {
@@ -172,22 +290,39 @@ const BlogManagement = () => {
             const res = await fetch(`http://localhost:5001/api/blogs/${id}`, options);
             const response = await res.json();
             console.log("Fecthing selected blog data :", response);
-            setBlogsData({ ...response, isEdit: true });
+            let data = { ...response, isEdit: true, modifiedBy: response.modifiedBy.name };
+            setBlogsData(data);
+            setDataCopy(JSON.stringify(data));
+
         } catch (ex) {
             console.error("Error fetching selected blog data: ", ex);
         }
         finally {
             setShowLoading(false);
         }
+
+
     };
 
     const handleRowClick = (index, item) => {
         console.log("Row index : ", index, item);
-        fetchSelectedBlog(item._id);
-    }
-    const handleFileUploadClick = () => {
-        fileInputRef.current.click(); // Open file selector
+        //fetchSelectedBlog(item._id);
+        handleDataChange(item._id);
     };
+
+    const handleFileUploadClick = (type) => {
+        if (type === "image") imageInputRef.current.click();
+        if (type === "video") videoInputRef.current.click();
+    };
+
+    const isValueChanged = () => {
+
+        console.log("isValueChanged dataCopy:", dataCopy);
+        console.log("isValueChanged blogsData:", blogsData);
+        console.log("isValueChanged :", dataCopy !== JSON.stringify(blogsData));
+        return dataCopy !== JSON.stringify(blogsData);
+    }
+
     const clickAction = (e) => {
         if (e) {
             let action = e.id;
@@ -218,7 +353,7 @@ const BlogManagement = () => {
                 clearForm(e);
             }
             if (action == "btn_close") {
-
+                onClose();
             }
             if (action == "btn_img") {
                 setShowImagePreview(true);
@@ -260,51 +395,45 @@ const BlogManagement = () => {
                             <input className={`form-check-input ms-2 wildlife-checkbox`} type="checkbox" name="isFeatured" checked={blogsData.isFeatured} onChange={onCheckChange} />
                         </div>
                     </div>
-                    {/* <div className="col-md-6 mb-2">
-                        <label className="form-label" htmlFor="image">Image</label>
-                        <div className="col-md-12 d-flex justify-content-between">
-                            <div className="col-md-10 me-3">
-                                <input type="file" name="image" onChange={handleFileChange} />
-                            </div>
-                            <div className="col-md-2 mt-2">
-                                <button type="button" id="btn_img" className="wlidlife-btn me-1" onClick={(e) => clickAction({ id: 'btn_img' })}><FontAwesomeIcon icon={faImage} /></button>
-                            </div>
-                        </div>
-                    </div> */}
                     <div className="col-md-6 mb-2">
                         <label className="form-label" htmlFor="image">Image</label>
                         <div className="col-md-12 d-flex justify-content-between align-items-center">
                             <div className="col-md-10 me-3">
-                                <input type="file" name="image" ref={fileInputRef} onChange={handleFileChange} style={{ display: "none" }} />
-                                <div className="p-2 border rounded bg-light d-flex justify-content-between align-items-center cursor-pointer" onClick={handleFileUploadClick} style={{ cursor: "pointer" }} >
-                                    <span>{blogsData.image}</span>
-                                    <FontAwesomeIcon icon={faUpload} className="ms-2" style={{ color: "rgb(85, 102, 102)" }} />
+                                <input type="file" name="image" accept="image/png, image/gif, image/jpeg" ref={imageInputRef} onChange={(e) => handleFileChange(e, "image")} style={{ display: "none" }} />
+                                <div className="p-2 border rounded bg-light d-flex justify-content-between align-items-center cursor-pointer" onClick={(e) => handleFileUploadClick("image")} style={{ cursor: "pointer" }} >
+                                    {handleSubstring(blogsData.image ? <span>{blogsData.image.file_name} </span> : <span style={{ opacity: 0.5 }}>Select image</span>)}
+                                    {blogsData.image && <FontAwesomeIcon icon={faClose} onClick={(e) => handleRemove(e, "image")} className="wildlife-window-close ms-2" />}
+                                    <FontAwesomeIcon icon={faUpload} className="me-0 ms-2" style={{ color: "rgb(85, 102, 102)" }} />
                                 </div>
                             </div>
                             <div className="col-md-2 mt-2">
-                                <button type="button" id="btn_img" className="wlidlife-btn me-1" onClick={() => fileInputRef.current.click()}>
+                                <button type="button" id="btn_img" accept="image/png, image/gif, image/jpeg" className="wlidlife-btn me-1" onClick={(e) => clickAction({ id: 'btn_img' })}>
                                     <FontAwesomeIcon icon={faImage} />
                                 </button>
                             </div>
-                            {/* <div className="col-md-2 mt-2">
-                                <button type="button" id="btn_img" className="wlidlife-btn me-1" onClick={(e) => clickAction({ id: 'btn_img' })}><FontAwesomeIcon icon={faImage} /></button>
-                            </div> */}
                         </div>
                     </div>
                     <div className="col-md-6 mb-2">
-                        <label className="form-label" htmlFor="video">Video</label>
-                        <div className="col-md-12 d-flex justify-content-between">
+                        <label className="form-label" htmlFor="image">Video</label>
+                        <div className="col-md-12 d-flex justify-content-between align-items-center">
                             <div className="col-md-10 me-3">
-                                <input type="file" name="video" onChange={handleFileChange} />
+                                <input type="file" name="video" ref={videoInputRef} accept="video/mp4,video/x-m4v,video/*" onChange={(e) => handleFileChange(e, "video")} style={{ display: "none" }} />
+                                <div className="p-2 border rounded bg-light d-flex justify-content-between align-items-center cursor-pointer" onClick={(e) => handleFileUploadClick("video")} style={{ cursor: "pointer" }} >
+                                    {handleSubstring(blogsData.video ? <span>{blogsData.video.file_name} </span> : <span style={{ opacity: 0.5 }}>Select video</span>)}
+                                    {blogsData.video && <FontAwesomeIcon icon={faClose} onClick={(e) => handleRemove(e, 'video')} className="wildlife-window-close ms-2" />}
+                                    <FontAwesomeIcon icon={faUpload} className="me-0 ms-2" style={{ color: "rgb(85, 102, 102)" }} />
+                                </div>
                             </div>
                             <div className="col-md-2 mt-2">
-                                <button type="button" id="btn_video" className="wlidlife-btn me-1" onClick={(e) => clickAction({ id: 'btn_video' })}><FontAwesomeIcon icon={faVideo} /></button>
+                                <button type="button" id="btn_img" className="wlidlife-btn me-1" onClick={(e) => clickAction({ id: 'btn_video' })}>
+                                    <FontAwesomeIcon icon={faVideo} />
+                                </button>
                             </div>
                         </div>
                     </div>
-                    <div className='col-md-12 mt-5 mb-2' hidden={false}>
+                    <div className='col-md-12 mt-5 mb-2' hidden={!blogsData.isEdit}>
                         <div className='col'>
-                            <AuditLabel modifiedOn={blogsData.modifiedOn} modifiedBy={blogsData.modifiedBy} />
+                            <AuditLabel hidden={!blogsData.isEdit} modifiedOn={blogsData.modifiedOn} modifiedBy={blogsData.modifiedBy} />
                         </div>
                     </div>
                 </div>
@@ -316,8 +445,8 @@ const BlogManagement = () => {
         <div className="wildlife-management">
             <div className="wildlife-window-header">
                 <h5 className="wildlife-header-title text-truncate">Blogs</h5>
-                <span className="wildlife-window-close" title="Close" onClick={(e) => onClose}>
-                    <FontAwesomeIcon icon={faTimes} />
+                <span className="wildlife-window-close" title="Close" >
+                    <FontAwesomeIcon icon={faTimes} onClick={(e) => onClose} />
                 </span>
             </div>
             <WildlifeBody>
@@ -366,7 +495,7 @@ const BlogManagement = () => {
                 </div>
             </div>
 
-            {showImagePreview && <ImagePreview onClose={() => { setShowImagePreview(false) }} images={Images} callback={onImageChange} title="Blogs/Image" />}
+            {showImagePreview && <ImagePreview onClose={() => { setShowImagePreview(false) }} images={Images} callback={onImageChange} title="Blogs / Images" file_dir="blogs" />}
 
             {showLoading && <Loader>Loading</Loader>}
         </div>

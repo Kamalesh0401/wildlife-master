@@ -4,17 +4,43 @@ import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import "./index.css";
 import Loader from "../../components/Loader";
 
-const ImagePreview = ({ onClose, images, callback, title }) => {
+const ImagePreview = ({ onClose, images, callback, title, file_dir }) => {
     const [imageList, setImageList] = useState([]);
+    const token = localStorage.getItem("token");
+
+    // useEffect(() => {
+    //     setTimeout(() => {
+    //         setImageList(images || []);
+    //     }, 1000);
+
+
+    //     clearTimeout();
+    // }, [images]);
 
     useEffect(() => {
-        setTimeout(() => {
-            setImageList(images || []);
-        }, 1000);
+        const fetchImages = async () => {
 
+            const options = {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                }
+            };
 
-        clearTimeout();
-    }, [images]);
+            try {
+                const res = await fetch(`http://localhost:5001/api/files/${file_dir}`, options);
+                let response = await res.json();
+                setImageList(response)
+            } catch (ex) {
+                console.error("Error fetching Images: ", ex);
+            }
+            finally {
+            }
+        };
+
+        fetchImages();
+    }, []);
 
     const handleSubstring = (imgName) => {
         const maxLength = 22;
@@ -44,36 +70,53 @@ const ImagePreview = ({ onClose, images, callback, title }) => {
                     </div>
                     <div className="row mt-3">
                         {imageList.map((data, index) => (
+                            // <div className="col-md-3 p-2 mb-3" key={index}>
+                            //     <div className="image-card" style={{ cursor: "pointer" }}>
+                            //         <div style={{ height: "150px" }} onClick={(e) => callback(e, data._id)}>
+                            //             {data.file_url ? (
+                            //                 data.is_video ? (
+                            //                     <video
+                            //                         controls
+                            //                         style={{
+                            //                             width: "100%",
+                            //                             height: "150px",
+                            //                             objectFit: "cover",
+                            //                         }}
+                            //                     >
+                            //                         <source src={data.file_url} type="video/mp4" />
+                            //                     </video>
+                            //                 ) : (
+                            //                     <img
+                            //                         src={data.file_url}
+                            //                         alt={data.file_name}
+                            //                         style={{
+                            //                             width: "100%",
+                            //                             height: "150px",
+                            //                             objectFit: "cover",
+                            //                         }}
+                            //                     />
+                            //                 )
+                            //             ) : null}
+                            //         </div>
+                            //         <div className="card-body text-center p-2">
+                            //             <p className="image-card-text">{handleSubstring(data.file_name)}</p>
+                            //         </div>
+                            //     </div>
+                            // </div>
+
                             <div className="col-md-3 p-2 mb-3" key={index}>
-                                <div className="image-card" style={{ cursor: "pointer" }}>
-                                    <div style={{ height: "150px" }} onClick={(e) => callback(e, data._id)}>
-                                        {data.url ? (
-                                            data.is_video ? (
-                                                <video
-                                                    controls
-                                                    style={{
-                                                        width: "100%",
-                                                        height: "150px",
-                                                        objectFit: "cover",
-                                                    }}
-                                                >
-                                                    <source src={data.url} type="video/mp4" />
-                                                </video>
-                                            ) : (
-                                                <img
-                                                    src={data.url}
-                                                    alt={data.img_name}
-                                                    style={{
-                                                        width: "100%",
-                                                        height: "150px",
-                                                        objectFit: "cover",
-                                                    }}
-                                                />
-                                            )
+                                <div className="card" style={{ cursor: "pointer" }} onClick={(e) => callback(e,  data)}>
+                                    <div id={data.img_dir + data.img_srl} style={{ height: "150px" }} >
+                                        {data.file_url ? (
+                                            data.is_video ?
+                                                (<video controls style={{ width: "100%", height: "150px", objectFit: "cover" }}>
+                                                    <source src={data.file_url} type="video/mp4" />
+                                                </video>) :
+                                                <img src={data.file_url} className="card-img-top" style={{ width: "100%", height: "150px", objectFit: "cover" }} />
                                         ) : null}
                                     </div>
                                     <div className="card-body text-center p-2">
-                                        <p className="image-card-text">{handleSubstring(data.img_name)}</p>
+                                        <p className="card-text">{handleSubstring(data.file_name)}</p>
                                     </div>
                                 </div>
                             </div>

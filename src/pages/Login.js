@@ -4,6 +4,7 @@ import "../styles/pages/deepseabluelogin.css";
 import { useNavigate } from "react-router-dom";
 //import "../styles/pages/GreenOlivelogin.css";
 //import "../styles/pages/Slategreylogin.css";
+import Loader from "../components/Loader";
 
 
 
@@ -45,11 +46,19 @@ const Login = () => {
             });
             if (res.status == 200) {
                 const response = await res.json();
+                console.log("LogIn User : ", response);
+                localStorage.setItem("admin", JSON.stringify(response.admin));
                 localStorage.setItem("token", response.token);
                 navigate('/dashboard');
             }
+            else {
+                const response = await res.json();
+                if (response && response.message)
+                    alert(response.message);
+            }
         } catch (ex) {
-            console.error("Error add new blog data: ", ex);
+            alert("Something went wrong");
+            console.error("Error login ", ex.message);
         }
         finally {
             setShowLoading(false);
@@ -101,7 +110,9 @@ const Login = () => {
                     </div> */}
                 </div>
             </section>
+            {showLoading && <Loader>Loadin</Loader>}
         </div>
+
     );
 };
 

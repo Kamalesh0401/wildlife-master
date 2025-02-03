@@ -8,7 +8,7 @@ class TableView extends Component {
             currentPage: 1,
             sortColumn: '',
             sortDirection: 'asc',
-            rowsPerPage: 5,
+            rowsPerPage: 10,
         };
     }
 
@@ -29,7 +29,7 @@ class TableView extends Component {
 
     // Get sorted and paginated data
     getProcessedData = () => {
-        const { data } = this.props;
+        const { data, rowCount } = this.props;
         const { sortColumn, sortDirection, currentPage, rowsPerPage } = this.state;
 
         let processedData = [...data];
@@ -44,9 +44,11 @@ class TableView extends Component {
         }
 
         // Pagination
-        const startIndex = (currentPage - 1) * rowsPerPage;
-        const endIndex = startIndex + rowsPerPage;
-        processedData = processedData.slice(startIndex, endIndex);
+        if (rowCount) {
+            const startIndex = (currentPage - 1) * rowsPerPage;
+            const endIndex = startIndex + rowsPerPage;
+            processedData = processedData.slice(startIndex, endIndex);
+        }
 
         return processedData;
     };
